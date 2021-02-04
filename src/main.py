@@ -1,67 +1,20 @@
 # import the pygame module, so you can use it
 import pygame
 
-from tile import Tile
+from src.maze import Maze
 from render import rendertile
-import random
 
-# define a main function
 width = 1600
 height = 900
 rows = 10
 cols = 20
 FPS = 60
-blockwidth = width / cols
-blockheight = height / rows
 staticlocations = True
 
 
-def initalizeStartAndEnd(maze: list[Tile], static_locations=True):
-    filtered = []
-    if not static_locations:
-        for e in maze:
-            if e.row == 0 or e.row == rows - 1 or e.col == 0 or e.col == cols - 1:
-                filtered.append(e)
-        random.choice(filtered).set_start()
-        random.choice(filtered).set_end()
-
-    else:
-        maze[0].start = True
-        maze[0].changeColor((255, 0, 0))
-        maze[len(maze) - 1].end = True
-        maze[len(maze) - 1].changeColor((0, 255, 0))
-
-
-def translate_index(row: int, col: int):
-    return row * cols + col
-
-
-def addneighbours(maze: list[Tile]):
-    for entity in maze:
-
-        left = translate_index(entity.row, entity.col - 1)
-        right = translate_index(entity.row, entity.col + 1)
-        above = translate_index(entity.row - 1, entity.col)
-        below = translate_index(entity.row + 1, entity.col)
-        if left > 0:
-            entity.neighbours.append(maze[left])
-        if right < len(maze) - 1:
-            entity.neighbours.append(maze[right])
-        if above > 0:
-            entity.neighbours.append(maze[above])
-        if below < len(maze) - 1:
-            entity.neighbours.append(maze[below])
-
-
-def initalizemaze(numberofmazes: int, mazes: list[list[Tile]]):
+def initalizemazes(numberofmazes: int, mazes: list[Maze]):
     for i in range(numberofmazes):
-        maze = []
-        for row in range(rows):
-            for col in range(cols):
-                tile = Tile(row, col, False, blockwidth, blockheight)
-                maze.append(tile)
-        addneighbours(maze)
-        initalizeStartAndEnd(maze, static_locations=staticlocations)
+        maze = Maze(rows, cols, width / cols, height / rows, static_locations=staticlocations)
         mazes.append(maze)
 
 
@@ -69,15 +22,16 @@ def main():
     pygame.init()
     pygame.display.set_caption("mazegenerator :D")
 
+
     screen = pygame.display.set_mode((width, height))
     framepersec = pygame.time.Clock()
-    mazes: list[list[Tile]] = []
-    initalizemaze(1, mazes)
+    mazes: list[Maze] = []
+    initalizemazes(1, mazes)
 
     running = True
     currentmaze = mazes[0]
     print(len(mazes))
-    print(len(mazes[0]))
+    print(len(mazes[0].board))
 
     # main loopI
     while running:
@@ -88,7 +42,7 @@ def main():
                 # change the value to False, to exit the main loop
                 running = False
         screen.fill((0, 0, 0))
-        rendertile.rendermaze(screen, currentmaze)
+        rendertile.rendermaze(screen, currentmaze.board)
         pygame.display.update()
         framepersec.tick(FPS)
 
