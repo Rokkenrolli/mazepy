@@ -14,7 +14,7 @@ def renderlines(screen, tile: pygame.sprite.Sprite):
         pygame.draw.line(screen, (0, 0, 0), tile.rect.bottomleft, tile.rect.bottomright, 2)
 
 
-def rendermaze(screen: pygame.surface.Surface, maze: pygame.sprite.Group):
+def rendermaze(screen: pygame.surface.Surface, maze: list[Tile]):
     for entity in maze:
         screen.blit(entity.surf, entity.rect)
         renderlines(screen, entity)

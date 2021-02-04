@@ -3,6 +3,7 @@ import pygame
 
 from tile import Tile
 from render import rendertile
+import random
 
 # define a main function
 width = 1600
@@ -12,10 +13,27 @@ cols = 20
 FPS = 60
 blockwidth = width / cols
 blockheight = height / rows
+staticlocations = True
+
+
+def initalizeStartAndEnd(maze: list[Tile], static_locations=True):
+    filtered = []
+    if not static_locations:
+        for e in maze:
+            if e.row == 0 or e.row == rows - 1 or e.col == 0 or e.col == cols - 1:
+                filtered.append(e)
+        random.choice(filtered).set_start()
+        random.choice(filtered).set_end()
+
+    else:
+        maze[0].start = True
+        maze[0].changeColor((255, 0, 0))
+        maze[len(maze) - 1].end = True
+        maze[len(maze) - 1].changeColor((0, 255, 0))
 
 
 def translate_index(row: int, col: int):
-    return row * rows + col
+    return row * cols + col
 
 
 def addneighbours(maze: list[Tile]):
@@ -27,24 +45,23 @@ def addneighbours(maze: list[Tile]):
         below = translate_index(entity.row + 1, entity.col)
         if left > 0:
             entity.neighbours.append(maze[left])
-        if right < cols - 1:
+        if right < len(maze) - 1:
             entity.neighbours.append(maze[right])
         if above > 0:
             entity.neighbours.append(maze[above])
-        if below < rows - 1:
+        if below < len(maze) - 1:
             entity.neighbours.append(maze[below])
 
 
-def initalizemaze(numberofmazes: int, mazes: list[pygame.sprite.Group]):
+def initalizemaze(numberofmazes: int, mazes: list[list[Tile]]):
     for i in range(numberofmazes):
-        maze = pygame.sprite.Group()
-        tiles = []
+        maze = []
         for row in range(rows):
             for col in range(cols):
                 tile = Tile(row, col, False, blockwidth, blockheight)
-                maze.add(tile)
-                tiles.append(tile)
-        addneighbours(tiles)
+                maze.append(tile)
+        addneighbours(maze)
+        initalizeStartAndEnd(maze, static_locations=staticlocations)
         mazes.append(maze)
 
 
@@ -54,18 +71,13 @@ def main():
 
     screen = pygame.display.set_mode((width, height))
     framepersec = pygame.time.Clock()
-    mazes: list[pygame.sprite.Group] = []
+    mazes: list[list[Tile]] = []
     initalizemaze(1, mazes)
 
     running = True
     currentmaze = mazes[0]
     print(len(mazes))
     print(len(mazes[0]))
-
-    first = currentmaze.sprites().__getitem__(21)
-    first.changeColor((255,0,0))
-    for i in first.neighbours:
-        i.changeColor((100, 100, 100))
 
     # main loopI
     while running:
