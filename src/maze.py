@@ -1,10 +1,14 @@
 import random
 
+from src.generators.generator import generator
 from src.utils import translate_index
 from src.tile import Tile
 
 
 class Maze:
+
+    def generate_maze(self, weights=(0.25, 0.25, 0.25, 0.25), use_weights=False):
+        generator(self.board, weights, use_weights)
 
     def addneighbours(self, maze: list[Tile]):
         for entity in maze:
@@ -32,10 +36,8 @@ class Maze:
             random.choice(filtered).set_end()
 
         else:
-            maze[0].start = True
-            maze[0].changeColor((255, 0, 0))
-            maze[len(maze) - 1].end = True
-            maze[len(maze) - 1].changeColor((0, 255, 0))
+            maze[0].set_start()
+            maze[len(maze) - 1].set_end()
 
     def initalize(self):
         for row in range(self.rows):

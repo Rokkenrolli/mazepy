@@ -4,13 +4,13 @@ from src.tile import Tile
 
 
 def renderlines(screen, tile: pygame.sprite.Sprite):
-    if tile.walls.top:
+    if tile.walls.top[0]:
         pygame.draw.line(screen, (0, 0, 0), tile.rect.topleft, tile.rect.topright, 2)
-    if tile.walls.right:
+    if tile.walls.right[0]:
         pygame.draw.line(screen, (0, 0, 0), tile.rect.topright, tile.rect.bottomright, 2)
-    if tile.walls.left:
+    if tile.walls.left[0]:
         pygame.draw.line(screen, (0, 0, 0), tile.rect.topleft, tile.rect.bottomleft, 2)
-    if tile.walls.bottom:
+    if tile.walls.bottom[0]:
         pygame.draw.line(screen, (0, 0, 0), tile.rect.bottomleft, tile.rect.bottomright, 2)
 
 

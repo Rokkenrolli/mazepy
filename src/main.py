@@ -30,6 +30,7 @@ def main():
 
     running = True
     currentmaze = mazes[0]
+
     print(len(mazes))
     print(len(mazes[0].board))
 
@@ -41,6 +42,8 @@ def main():
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                currentmaze.generate_maze()
         screen.fill((0, 0, 0))
         rendertile.rendermaze(screen, currentmaze.board)
         pygame.display.update()
