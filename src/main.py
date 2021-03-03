@@ -1,6 +1,7 @@
 # import the pygame module, so you can use it
 import pygame
 
+from src.generators.wilson import Wilson
 from src.maze import Maze
 from render import rendertile
 
@@ -14,7 +15,7 @@ staticlocations = True
 
 def initalizemazes(numberofmazes: int, mazes: list[Maze]):
     for i in range(numberofmazes):
-        maze = Maze(rows, cols, width / cols, height / rows, static_locations=staticlocations)
+        maze = Maze(rows, cols, width / cols, height / rows, Wilson((0.25,0.25,0.25,0.25), False), static_locations=staticlocations)
         mazes.append(maze)
 
 
@@ -43,7 +44,8 @@ def main():
                 # change the value to False, to exit the main loop
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                currentmaze.generate_maze()
+                if not currentmaze.generated:
+                    currentmaze.generate_maze()
         screen.fill((0, 0, 0))
         rendertile.rendermaze(screen, currentmaze.board)
         pygame.display.update()
