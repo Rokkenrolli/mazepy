@@ -9,8 +9,8 @@ width = 1600
 height = 900
 board_width = width * 1
 board_height = height * 1
-rows = 10
-cols = 20
+rows = 20
+cols = 40
 FPS = 60
 staticlocations = True
 screen = pygame.display.set_mode((width, height))
@@ -33,6 +33,7 @@ def main():
     pygame.init()
     pygame.display.set_caption("maze generator :D")
     mazes: list[Maze] = []
+    # left right up down / cannot be zero / must add up to 1
     weights = (0.25, 0.25, 0.25, 0.25)
     initalizemazes(1, mazes, weights)
     render_walls = True
