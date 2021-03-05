@@ -7,8 +7,8 @@ from render import render
 
 width = 1600
 height = 900
-board_width = width * 0.8
-board_height = height * 0.8
+board_width = width * 1
+board_height = height * 1
 rows = 10
 cols = 20
 FPS = 60
@@ -21,10 +21,10 @@ screen.blit(board, (0, 0))
 frames_per_sec = pygame.time.Clock()
 
 
-def initalizemazes(numberofmazes: int, mazes: list[Maze]):
+def initalizemazes(numberofmazes: int, mazes: list[Maze], weights: (float, float, float, float)):
     for i in range(numberofmazes):
         maze = Maze(rows, cols, board_width / cols, board_height / rows,
-                    Wilson(screen), weights=(0.125, 0.5, 0.25, 0.125),
+                    Wilson(screen), weights=weights,
                     static_locations=staticlocations)
         mazes.append(maze)
 
@@ -33,7 +33,8 @@ def main():
     pygame.init()
     pygame.display.set_caption("maze generator :D")
     mazes: list[Maze] = []
-    initalizemazes(1, mazes)
+    weights = (0.25, 0.25, 0.25, 0.25)
+    initalizemazes(1, mazes, weights)
     render_walls = True
     render_prev = False
     running = True
