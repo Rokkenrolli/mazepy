@@ -1,15 +1,23 @@
 import random
 
 from src.generators.generators import Generator
-from src.generators.wilson import Wilson
 from src.utils import translate_index
 from src.tile import Tile
 
 
 class Maze:
 
-    def generate_maze(self, weights=(0.25, 0.25, 0.25, 0.25), use_weights=False):
+    def generate_maze(self):
         self.generator.__generate__(maze=self)
+        self.finalize()
+
+    def finalize(self):
+        for cell in self.board:
+            if cell.start:
+                cell.set_start()
+            if cell.end:
+                cell.set_end()
+        #TODO: other analytics here too
 
     def addneighbours(self, maze: list[Tile]):
         for entity in maze:

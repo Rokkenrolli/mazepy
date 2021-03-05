@@ -9,21 +9,29 @@ class Tile(pygame.sprite.Sprite):
 
     def __init__(self, row: int, col: int, visited: bool, width: float, height: float):
         super(Tile, self).__init__()
+        self.default_color = (189, 115, 189)
         self.row = row
         self.col = col
         self.visited = visited
         self.pos = vec(col * width, row * height)
         self.surf = pygame.surface.Surface((width, height))
-        self.surf.fill((255, 255, 255))
+        self.surf.fill(self.default_color)
         self.rect = self.surf.get_rect(center=(self.pos.x + (width / 2), self.pos.y + (height / 2)))
         self.walls = {'top': True, 'right': True, 'bottom': True, 'left': True}
         self.neighbours = {}
         self.start = False
         self.end = False
         self.prev = None
+        self.on_focus = False
 
-    # def on_click(self):
-    #   for n in self.neighbours:
+    def on_click(self):
+        self.on_focus = not self.on_focus
+        for n in self.neighbours.values():
+            if self.on_focus:
+                n.change_color((255, 0, 0))
+            else:
+                n.change_color(self.default_color)
+
 
     def change_color(self, color: (int, int, int)):
         self.surf.fill(color)
