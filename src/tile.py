@@ -29,8 +29,12 @@ class Tile(pygame.sprite.Sprite):
         for n in self.neighbours.values():
             if self.on_focus:
                 n.change_color((0, 0, 255))
+                if not self.start and not self.end:
+                    self.change_color((255, 255, 0))
             else:
                 n.change_color(self.default_color)
+                if not self.start and not self.end:
+                    self.change_color(self.default_color)
 
 
     def change_color(self, color: (int, int, int)):
