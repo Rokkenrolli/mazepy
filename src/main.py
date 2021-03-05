@@ -4,7 +4,6 @@ import pygame
 from src.generators.wilson import Wilson
 from src.maze import Maze
 from render import render
-from src.utils import on_board
 
 width = 1600
 height = 900
@@ -25,7 +24,7 @@ frames_per_sec = pygame.time.Clock()
 def initalizemazes(numberofmazes: int, mazes: list[Maze]):
     for i in range(numberofmazes):
         maze = Maze(rows, cols, board_width / cols, board_height / rows,
-                    Wilson((0.25, 0.25, 0.25, 0.25), False, screen),
+                    Wilson(screen), weights=(0.125, 0.5, 0.25, 0.125),
                     static_locations=staticlocations)
         mazes.append(maze)
 
@@ -36,7 +35,7 @@ def main():
     mazes: list[Maze] = []
     initalizemazes(1, mazes)
     render_walls = True
-    render_prev = True
+    render_prev = False
     running = True
     current_maze = mazes[0]
 

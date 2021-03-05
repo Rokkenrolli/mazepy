@@ -36,6 +36,20 @@ class Tile(pygame.sprite.Sprite):
                 if not self.start and not self.end:
                     self.change_color(self.default_color)
 
+    def get_neighbours(self):
+        a = []
+        for n in self.neighbours.values():
+            a.append(n[0])
+        return a
+
+    def neighbour_probabilities(self):
+        a = []
+        for n in self.neighbours.values():
+            a.append(n[1])
+        # map the probabilities so they always add to 1
+        # keeping their proportional size
+        a = list(map(lambda x: x / sum(a), a))
+        return a
 
     def change_color(self, color: (int, int, int)):
         self.surf.fill(color)

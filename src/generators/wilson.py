@@ -11,31 +11,25 @@ class HitItself(Exception):
 
 class Wilson(Generator):
 
-    def __init__(self, weights: (int, int, int, int), use_weights: bool, screen):
+    def __init__(self, screen):
         super().__init__()
-        self.weights = weights
-        self.use_weights = use_weights
         self.screen = screen
 
     def step(self, cell, unvisited, path):
         neighbor_cell: Tile
         cell.change_color((115, 141, 189))
-        if self.use_weights:
-            weights_array = []
-            # TODO: add weights to this
+        neighbor_cell = np.random.choice(cell.get_neighbours(), p=cell.neighbour_probabilities())
+        if neighbor_cell in unvisited:
+            raise HitItself
         else:
-            neighbor_cell = np.random.choice(list(cell.neighbours.values()))
-            if neighbor_cell in unvisited:
-                raise HitItself
-            else:
-                path.append(neighbor_cell)
+            path.append(neighbor_cell)
 
-            return neighbor_cell
+        return neighbor_cell
 
     def wilson_walk(self, unvisited):
         temp = unvisited.copy()
         cell = np.random.choice(temp)
-        path = [cell]
+        path: [Tile] = [cell]
         while cell in temp:
             cell = self.step(cell, temp, path)
         prev = None
@@ -47,9 +41,9 @@ class Wilson(Generator):
                 prev.prev = c
                 prev.break_wall(c)
                 temp.remove(prev)
-                print("row", prev.row, "col", prev.col)
-                print("row", prev.prev.row, "col", prev.prev.col)
-                print("-------------")
+                # print("row", prev.row, "col", prev.col)
+                # print("row", prev.prev.row, "col", prev.prev.col)
+                # print("-------------")
             prev = c
         return temp
 
