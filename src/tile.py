@@ -28,7 +28,7 @@ class Tile(pygame.sprite.Sprite):
         self.on_focus = not self.on_focus
         for n in self.neighbours.values():
             if self.on_focus:
-                n.change_color((255, 0, 0))
+                n.change_color((0, 0, 255))
             else:
                 n.change_color(self.default_color)
 
