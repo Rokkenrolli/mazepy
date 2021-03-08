@@ -1,15 +1,37 @@
 import random
 
+import numpy as np
+
 from src.generators.generators import Generator
+from src.generators.wilson import HitItself
 from src.utils import translate_index
 from src.tile import Tile
 
 
 class Maze:
 
-    def generate_maze(self):
-        self.generator.__generate__(maze=self)
-        self.finalize()
+    def generate_maze(self, rendering):
+        self.generating = True
+        self.update(rendering)
+
+    def update(self, rendering):
+        if not rendering:
+            while self.generating:
+                try:
+                    self.generating = self.generator.__update__(self)
+                except HitItself:
+                    continue
+            self.finalize()
+            return False
+        if self.generating:
+            try:
+                self.generating = self.generator.__update__(self)
+                return True
+            except HitItself:
+                return True
+        else:
+            self.finalize()
+            return False
 
     def finalize(self):
         for cell in self.board:
@@ -68,3 +90,6 @@ class Maze:
         self.weights = weights
         self.initalize()
         self.generator = generator
+        self.unvisited = self.board.copy()
+        self.generating = False
+        self.unvisited.remove((np.random.choice(self.unvisited)).visit())

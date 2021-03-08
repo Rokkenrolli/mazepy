@@ -13,7 +13,7 @@ def renderlines(screen, tile: pygame.sprite.Sprite):
         pygame.draw.line(screen, (0, 0, 0), tile.rect.bottomleft, tile.rect.bottomright, 2)
 
 
-def rendermaze(screen: pygame.surface.Surface, maze: list[Tile], render_walls:bool, render_prev: bool):
+def rendermaze(screen: pygame.surface.Surface, maze: list[Tile], render_walls: bool, render_prev: bool):
     for entity in maze:
         screen.blit(entity.surf, entity.rect)
         if render_walls:
@@ -25,3 +25,11 @@ def rendermaze(screen: pygame.surface.Surface, maze: list[Tile], render_walls:bo
 def renderprev(screen: pygame.surface.Surface, tile: pygame.sprite.Sprite):
     if tile.prev:
         pygame.draw.line(screen, (0, 250, 0), tile.rect.center, tile.prev.rect.center, 2)
+
+
+def render_text(surface, message, pos, background_color, text_size):
+    font = pygame.font.Font('freesansbold.ttf', text_size)
+    text = font.render(message, True, (255, 255, 255), background_color)
+    rect = text.get_rect()
+    rect.center = pos
+    surface.blit(text, rect)

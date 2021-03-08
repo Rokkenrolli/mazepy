@@ -84,3 +84,8 @@ class Tile(pygame.sprite.Sprite):
             self.walls['bottom'] = False
             other.walls['top'] = False
             return Direction.DOWN
+
+    def visit(self):
+        self.visited = True
+        self.change_color((255, 255, 255))
+        return self

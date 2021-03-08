@@ -14,6 +14,8 @@ class Wilson(Generator):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
+        self.cell: Tile = None
+        self.path = []
 
     def step(self, cell, unvisited, path):
         neighbor_cell: Tile
@@ -23,43 +25,40 @@ class Wilson(Generator):
             raise HitItself
         else:
             path.append(neighbor_cell)
-
+        cell.change_color(cell.default_color)
         return neighbor_cell
 
     def wilson_walk(self, unvisited):
-        temp = unvisited.copy()
-        cell = np.random.choice(temp)
-        path: [Tile] = [cell]
-        while cell in temp:
-            cell = self.step(cell, temp, path)
+
+        self.cell = np.random.choice(unvisited)
+        self.path: [Tile] = [self.cell]
+        while self.cell in unvisited:
+            self.cell = self.step(self.cell, unvisited, self.path)
+            for c in self.path:
+                c.change_color((255, 0, 0))
         prev = None
-        for c in path:
+        for c in self.path:
             default = (255, 255, 255)
             c.default_color = default
-            c.change_color(default)
+            c.visit()
             if prev:
                 prev.prev = c
                 prev.break_wall(c)
-                temp.remove(prev)
+                unvisited.remove(prev)
                 # print("row", prev.row, "col", prev.col)
                 # print("row", prev.prev.row, "col", prev.prev.col)
                 # print("-------------")
             prev = c
-        return temp
+        return unvisited
 
-    def __generate__(self, maze):
-        maze.generated = True
-        unvisited = []
-        for tile in maze.board:
-            unvisited.append(tile)
+    def __update__(self, maze):
 
-        first = np.random.choice(unvisited)
-        unvisited.remove(first)
-
-        while len(unvisited) > 0:
+        if len(maze.unvisited) > 0:
             # print(unvisited)
-            # print(len(unvisited))
+            # print(len(maze.unvisited))
             try:
-                unvisited = self.wilson_walk(unvisited)
+                maze.unvisited = self.wilson_walk(maze.unvisited)
+                return True
             except HitItself:
-                continue
+                return True
+        return False
